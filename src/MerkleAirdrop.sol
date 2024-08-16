@@ -13,7 +13,7 @@ contract MerkleAirdrop{
     error MerkleAirdrop__AlreadyClaimed();
     //some list of addresses
     //allow someone in the list to claim a tokens
-    address[] public claimers;
+    address[] private claimers;
     bytes32 private immutable i_merkleRoot;
     IERC20 private immutable i_airdropToken;
 
@@ -61,5 +61,29 @@ contract MerkleAirdrop{
         */
         i_airdropToken.safeTransfer(account, amount);
         
+    }
+
+    //Getter functions
+    /*
+     address[] private claimers;
+    bytes32 private immutable i_merkleRoot;
+    IERC20 private immutable i_airdropToken;
+
+    mapping (address claimer=> bool claimed) private s_hasClaimed;
+     */
+    function getClaimers() external view returns(address[] memory){
+        return claimers;
+    }
+
+    function getMerkleRoot() external view returns(bytes32){
+        return i_merkleRoot;
+    }
+
+    function getAirdropToken() external view returns(IERC20){
+        return i_airdropToken;
+    }
+    
+    function getHasClaimed(address claimer) external view returns(bool){
+        return s_hasClaimed[claimer];
     }
 }

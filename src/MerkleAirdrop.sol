@@ -6,6 +6,8 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract MerkleAirdrop{
+
+    error MerkleAirdrop__InvalidProof();
     //some list of addresses
     //allow someone in the list to claim a tokens
     address[] public claimers;
@@ -28,5 +30,8 @@ contract MerkleAirdrop{
     function claim(address account, uint256 amount, bytes32[] calldata merkleproof) external {
         //calculate using the account and the amount the hash _. leaf node 
         bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(account, amount))));
+        if(!MerkleProof.verify(merkleproof, i_merkleRoot, leaf)){
+            revert MerkleAirdrop__InvalidProof();
+        }
     }
 }

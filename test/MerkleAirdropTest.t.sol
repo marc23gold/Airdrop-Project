@@ -5,12 +5,10 @@ pragma solidity ^0.8.24;
 import {Test, console} from "forge-std/Test.sol";
 import {MerkleAirdrop} from "../src/MerkleAirdrop.sol";
 import {DogToken} from "../src/DogToken.sol";
-import {ZkSyncChainChecker} from "lib/foundry-devops/src/ZkSyncChainChecker.sol";   
+import {ZkSyncChainChecker} from "lib/foundry-devops/src/ZkSyncChainChecker.sol";
 import {DeployMerkleAirdrop} from "../script/DeployMerkleAirdrop.s.sol";
 
-
-contract MerkleAirdropTest is Test, ZkSyncChainChecker{
-
+contract MerkleAirdropTest is Test, ZkSyncChainChecker {
     //init variables for contracts passed in and pranks
     MerkleAirdrop public merkleAirdrop;
     DogToken public dogToken;
@@ -24,23 +22,22 @@ contract MerkleAirdropTest is Test, ZkSyncChainChecker{
     bytes32[] public PROOF = [proofOne, proofTwo];
 
     function setUp() public {
-        if(!isZkSyncChain()) {
+        if (!isZkSyncChain()) {
             //deploy with the script
             DeployMerkleAirdrop deployer = new DeployMerkleAirdrop();
             (merkleAirdrop, dogToken) = deployer.deployMerkleAirdrop();
         } else {
-        //deploy the contract
-        //pass in the merkle root and the airdrop token
-        dogToken = new DogToken(); 
-        merkleAirdrop = new MerkleAirdrop(ROOT, dogToken);
-        dogToken.mint(dogToken.owner(), amountToSend);
-        dogToken.transfer(address(merkleAirdrop), amountToSend);
+            //deploy the contract
+            //pass in the merkle root and the airdrop token
+            dogToken = new DogToken();
+            merkleAirdrop = new MerkleAirdrop(ROOT, dogToken);
+            dogToken.mint(dogToken.owner(), amountToSend);
+            dogToken.transfer(address(merkleAirdrop), amountToSend);
         }
         (user, userPrivKey) = makeAddrAndKey("user");
-        
     }
 
-    function testUsersCanClaim () public {
+    function testUsersCanClaim() public {
         //arrange
         console.log("user address : %s", user);
         uint256 startBalance = dogToken.balanceOf(user);
@@ -50,6 +47,6 @@ contract MerkleAirdropTest is Test, ZkSyncChainChecker{
         uint256 endingBalance = dogToken.balanceOf(user);
         console.log("Ending balance", endingBalance);
         //assert
-        assertEq(endingBalance - startBalance,  amountToCollect);
+        assertEq(endingBalance - startBalance, amountToCollect);
     }
 }

@@ -6,9 +6,10 @@ import {Test, console} from "forge-std/Test.sol";
 import {MerkleAirdrop} from "../src/MerkleAirdrop.sol";
 import {DogToken} from "../src/DogToken.sol";
 import {ZkSyncChainChecker} from "lib/foundry-devops/src/ZkSyncChainChecker.sol";   
+import {DeployMerkleAirdrop} from "../script/DeployMerkleAirdrop.s.sol";
 
 
-contract MerkleAirdropTest is Test{
+contract MerkleAirdropTest is Test, ZkSyncChainChecker{
 
     //init variables for contracts passed in and pranks
     MerkleAirdrop public merkleAirdrop;
@@ -23,12 +24,18 @@ contract MerkleAirdropTest is Test{
     bytes32[] public PROOF = [proofOne, proofTwo];
 
     function setUp() public {
+        if(!isZkSyncChain()) {
+            //deploy with the script
+            DeployMerkleAirdrop deployer = new DeployMerkleAirdrop();
+            (merkleAirdrop, dogToken) = deployer.deployMerkleAirdrop();
+        } else {
         //deploy the contract
         //pass in the merkle root and the airdrop token
         dogToken = new DogToken(); 
         merkleAirdrop = new MerkleAirdrop(ROOT, dogToken);
         dogToken.mint(dogToken.owner(), amountToSend);
         dogToken.transfer(address(merkleAirdrop), amountToSend);
+        }
         (user, userPrivKey) = makeAddrAndKey("user");
         
     }

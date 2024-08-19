@@ -34,7 +34,7 @@ contract MerkleAirdrop{
      * @param amount this parameter is the amount of tokens that the account will claim
      * @param merkleproof this parameter is the merkle proof that will be used to verify the claim
      */
-    function claim(address account, uint256 amount, bytes32[] calldata merkleproof) external {
+    function claim(address account, uint256 amount, bytes32[] calldata merkleproof, uint8 v, bytes32 r, bytes32 s) external {
         /*
         Checks
         */

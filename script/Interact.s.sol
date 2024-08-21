@@ -36,4 +36,6 @@ contract Interact is Script {
         address mostRecentlyDeployed = DevOpsTools.get_most_recent_deployment("MerkleAirdrop", block.chainid);
         claimAirdrop(mostRecentlyDeployed);
     }
+
+    //fin
 }

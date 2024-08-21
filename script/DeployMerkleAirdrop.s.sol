@@ -20,4 +20,8 @@ contract DeployMerkleAirdrop is Script {
         vm.stopBroadcast();
         return (airdrop, dogToken);
     }
+
+      function run() external returns (MerkleAirdrop, DogToken) {
+        return deployMerkleAirdrop();
+    }
 }

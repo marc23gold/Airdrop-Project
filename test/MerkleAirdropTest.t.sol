@@ -8,7 +8,6 @@ import {DogToken} from "../src/DogToken.sol";
 import {ZkSyncChainChecker} from "lib/foundry-devops/src/ZkSyncChainChecker.sol";
 import {DeployMerkleAirdrop} from "../script/DeployMerkleAirdrop.s.sol";
 
-
 contract MerkleAirdropTest is Test, ZkSyncChainChecker {
     //init variables for contracts passed in and pranks
     MerkleAirdrop public merkleAirdrop;
@@ -46,12 +45,12 @@ contract MerkleAirdropTest is Test, ZkSyncChainChecker {
         uint256 startBalance = dogToken.balanceOf(user);
         bytes32 digest = merkleAirdrop.getMessageHash(user, amountToCollect);
         vm.prank(user);
-        //sign a message 
-        (uint8 v,bytes32 r,bytes32 s) = vm.sign(userPrivKey, digest);
-        //gas payer calls claim using the signed message 
+        //sign a message
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(userPrivKey, digest);
+        //gas payer calls claim using the signed message
         //act
-        merkleAirdrop.claim(user, amountToCollect, PROOF, v,r,s);
-        vm.prank(gasPayer); 
+        merkleAirdrop.claim(user, amountToCollect, PROOF, v, r, s);
+        vm.prank(gasPayer);
         uint256 endingBalance = dogToken.balanceOf(user);
         console.log("Ending balance", endingBalance);
         //assert
